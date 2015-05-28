@@ -1,19 +1,27 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Getting Started on Heroku</title>
-    <link href="normalize.css" media="all" rel="stylesheet">
-    <link href="main.css" media="all" rel="stylesheet">
-    <script src="main.js"></script>
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container">
-        <a href="/" id="site-id">Getting Started Demo App</a>
-      </div>
-    </header>
-    <div class="container">
-      <%= yield %>
-    </div>
-  </body>
-</html>
+
+<?php
+// Connecting, selecting database
+$dbconn = pg_connect("host=ec2-174-129-26-115.compute-1.amazonaws.com dbname=de0iskvfq4l6mf user=nzbxdlznjlmrlu password=_E7Q2Fwx9EZxx0du8eZlEK9Mit")
+	or die('Could not connect: ' . pg_last_error());
+
+// Performing SQL query
+$query = 'SELECT * FROM authors';
+$result = pg_query($query) or die('Query failed: ' . pg_last_error());
+
+// Printing results in HTML
+echo "<table>\n";
+while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+echo "\t<tr>\n";
+foreach ($line as $col_value) {
+echo "\t\t<td>$col_value</td>\n";
+}
+echo "\t</tr>\n";
+}
+echo "</table>\n";
+
+// Free resultset
+pg_free_result($result);
+
+// Closing connection
+pg_close($dbconn);
+?> 
